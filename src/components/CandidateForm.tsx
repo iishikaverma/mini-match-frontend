@@ -5,12 +5,10 @@ import api from "../api";
 function CandidateForm() {
 
     const [name, setName] = useState("");
-
     const [skills, setSkills] = useState("");
-
     const [experience, setExperience] = useState(0);
-
     const [location, setLocation] = useState("");
+    const [success, setSuccess] = useState("");
 
     async function handleSubmit(
         event: React.FormEvent<HTMLFormElement>
@@ -33,7 +31,10 @@ function CandidateForm() {
                 location
             });
 
-            alert("Candidate added successfully");
+            setSuccess("Candidate added successfully");
+            setTimeout(() => {
+                setSuccess("");
+            }, 3000);
 
             setName("");
             setSkills("");
@@ -47,7 +48,12 @@ function CandidateForm() {
     }
 
     return (
-
+        <div>
+        {success && (
+            <div className="bg-green-500/10 text-green-400 border border-green-500/20 p-4 rounded-xl mb-4">
+                {success}
+            </div>
+        )}
         <form
             onSubmit={handleSubmit}
             className="bg-white p-6 rounded-2xl shadow-md space-y-5"
@@ -83,17 +89,15 @@ function CandidateForm() {
                 className="w-full border border-gray-300 p-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-400"
             />
 
-            <input
-                type="number"
-                placeholder="Experience"
-
-                value={experience}
-
-                onChange={(event) =>
-                    setExperience(
-                        Number(event.target.value)
-                    )
-                }
+            <input type="number" placeholder="Experience"
+                min="0" value={experience}
+                onChange={(event) => {
+                    const value =
+                        Number(event.target.value);
+                    if (value >= 0) {
+                        setExperience(value);
+                    }
+                }}
 
                 className="w-full border border-gray-300 p-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-400"
             />
@@ -122,6 +126,7 @@ function CandidateForm() {
             </button>
 
         </form>
+        </div>
     );
 }
 
